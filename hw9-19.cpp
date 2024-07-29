@@ -19,7 +19,10 @@ int main()
     int term = 0;
     double creditPayment = 0.0;
     double dealerPayment = 0.0;
+    double totalCreditPayment = 0.0;
+    double totalDealerPayment = 0.0;
 
+    
     cout << "Car price (after any trade-in): ";
     cin >> carPrice;
     cout << "Rebate: ";
@@ -36,13 +39,19 @@ int main()
         creditRate / 12, term * 12);
     dealerPayment = getPayment(carPrice, 
         dealerRate / 12, term * 12);    //assign values to calculate payments
+
+totalCreditPayment = creditPayment * term * 12 ;
+totalDealerPayment = dealerPayment * term * 12;
     
     //display payments
     cout << fixed << setprecision(2) << endl; 
-    cout << "Credit union payment: $" 
-        << creditPayment << endl;
-    cout << "Dealer payment: $"
-        << dealerPayment << endl;
+    cout << "Credit union payment: $" << creditPayment << endl;
+    cout << "Dealer payment: $" << dealerPayment << endl;
+    
+//display total payments
+    cout<<"Total amount to be paid for Credit union: $"<<totalCreditPayment<<endl;
+    cout<<"Total amount to be paid for Dealer: "<<totalDealerPayment<<endl; 
+
     
     return 0;
 }//end of main function    
@@ -54,7 +63,10 @@ double getPayment(int prin,
 {
     //calculates and returns a monthly payment
     double monthPay = 0.0;
-    monthPay = prin * monthRate / 
-        (1 - pow(monthRate + 1, -months));
+   double pp = (1-pow(monthRate + 1, -months));
+    if (pp == 0)
+        return -1;
+    monthPay = prin * monthRate / pp;
     return monthPay;
+    
 } //end of getPayment function//*****function definition*****
