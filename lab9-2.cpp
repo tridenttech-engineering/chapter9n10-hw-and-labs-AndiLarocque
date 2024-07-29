@@ -20,7 +20,7 @@ double dealerpayment=0.0;
     cout<<"Car price (after any trade in): ";
     cin>>carPrice;
     cout<< "Rebate:";
-    cin>>reabate;
+    cin>>rebate;
     cout<<"Credit union rate: ";
     cin>>creditRate;
     cout<<"Dealer rate: ";
