@@ -1,76 +1,67 @@
-//Lab 9-2.cpp - displays two monthly car payments
+//Lab 9-19.cpp - displays two monthly car payments
 //Created/revised by <your name> on <current date>
-
 #include <iostream>
 #include <cmath>
-#include <iomanip>
 using namespace std;
 
-//function prototype
-double getPayment(int, double, int);
+// Function prototypes
+double getPayment(double, double, int);
+double totalCost(double, double, int);
 
-int main()
-{
-    //declare variables
-    int carPrice = 0;
-    int rebate = 0;
+int main() {
+    double carPrice = 0.0;
+    int term = 0;
     double creditRate = 0.0;
     double dealerRate = 0.0;
-    int term = 0;
-    double creditPayment = 0.0;
-    double dealerPayment = 0.0;
-    double totalCreditPayment = 0.0;
-    double totalDealerPayment = 0.0;
 
-    
-    cout << "Car price (after any trade-in): ";
+    // User input
+    cout << "Enter car price: ";
     cin >> carPrice;
-    cout << "Rebate: ";
-    cin >> rebate;
-    cout << "Credit union rate: ";
-    cin >> creditRate;
-    cout << "Dealer rate: ";
-    cin >> dealerRate;
-    cout << "Term in years: ";
+    cout << "Enter loan term (in years): ";
     cin >> term;
+    cout << "Enter credit union interest rate (as a percentage): ";
+    cin >> creditRate;
+    cout << "Enter dealer interest rate (as a percentage): ";
+    cin >> dealerRate;
 
-    //call function to calculate payments
-    creditPayment = getPayment(carPrice - rebate,
-        creditRate / 12, term * 12);
-    dealerPayment = getPayment(carPrice - rebate,
-        dealerRate / 12, term * 12);    
+    // Convert annual rates to decimals
+    creditRate /= 100.0;
+    dealerRate /= 100.0;
+    
+    // Calculate monthly payments
+    double creditPayment = getPayment(carPrice, creditRate, term * 12);
+    double dealerPayment = getPayment(carPrice, dealerRate, term * 12);
 
-totalCreditPayment = creditPayment * term * 12 ;
-totalDealerPayment = dealerPayment * term * 12;
-    
-    //display payments
-    //cout << fixed << setprecision(2) << endl; 
-   
-    cout << "Credit union payment: $" << creditPayment << endl;
-    cout << "Dealer payment: $" << dealerPayment << endl;
-    cout<< endl;
-    
-//display total payments
-    cout<<"Total amount to be paid for Credit union: $"<<totalCreditPayment<<endl;
-    cout<<"Total amount to be paid for Dealer: "<<totalDealerPayment<<endl; 
+    // Output monthly payments
+    if (creditPayment == -1 || dealerPayment == -1) {
+        cout << "Error: Division by zero in payment calculation." << endl;  
+    } 
+    else {
+        cout << "Monthly payment through credit union: $" << creditPayment << endl;
+        cout << "Monthly payment through dealer: $" << dealerPayment << endl;
 
-    
+        // Calculate and output total payments
+        double totalCreditCost = static_cast<int>(term * 12);
+        double totalDealerCost = static_cast<int>(term * 12);
+
+        cout << "Total cost through credit union: $" << totalCreditCost << endl;
+        cout << "Total cost through dealer: $" << totalDealerCost << endl;
+    }
+
     return 0;
-    
-}//end of main function    
+}
 
-    //*****function definitions*****
-double getPayment(int prin,
-                  double monthRate, 
-                  int months)
-{
-    //calculates and returns a monthly payment
-    double monthPay = 0.0,deno;
-deno= (1-pow(monthRate + 1, - months));
-    if (deno == 0)
-        monthPay= -1;
-    else
-    monthPay = prin * monthRate / deno;
-    return monthPay;
-    
-} //end of getPayment 
+// Function to calculate monthly payment
+double getPayment(double principal, double annualRate, int months) {
+    double monthlyRate = annualRate / 12.0;
+    double denominator = pow(1 + monthlyRate, months) - 1;
+    if (denominator == 0) {
+        return -1; // Error: Division by zero
+    }
+    return principal * (monthlyRate * pow(1 + monthlyRate, months)) / denominator;
+}
+
+// Function to calculate total cost
+double totalCost(double monthlyPayment, int months) {
+    return monthlyPayment * months;
+}
